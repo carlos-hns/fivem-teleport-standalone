@@ -1,0 +1,64 @@
+https://www.youtube.com/watch?v=UEKuFII70_4&ab_channel=LiamDormon
+
+npm init -y (Remova tudo e deixe só a parte de scripts)
+npm i -D @citizenfx/client @citizenfx/server typescript @types/node esbuild
+
+- Adicioner o tsconfig.json dentro da pasta do client:
+
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "module": "CommonJS",
+        "types": ["@citizenfx/client", "@citizenfx/server", "@types/node"],
+        "lib": ["ES2020"]
+    },
+    "include": ["./**/*"],
+    "exclude": ["**/node_modules", "**/__tests__/*"]
+}
+
+create a prod.build.js file:
+
+const { resolve } = require('path')
+const buildPath = resolve(__dirname, "build")
+
+const { build } = require('esbuild')
+
+build({
+    entryPoints: [],
+    outdir: resolve(buildPath, 'client'),
+    bundle: true,
+    minify: true,
+    platform: 'browser',
+    target: 'es2020',
+    logLevel: 'info'
+}).catch(() => process.exit(1))
+
+create a dev.build.js file:
+
+
+const { context } = require('esbuild');
+
+const { resolve } = require('path');
+const buildPath = resolve(__dirname, "build");
+
+async function watch() {
+    let ctx = await context({
+        entryPoints: ['./client/client.ts'],
+        outdir: resolve(buildPath, 'client'),
+        bundle: true,
+        minify: true,
+        platform: 'browser',
+        target: 'es2020',
+        logLevel: 'info',
+    });
+    
+    await ctx.watch();
+
+    console.log("[Running dev build]");
+}
+
+watch();
