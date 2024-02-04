@@ -8,10 +8,9 @@ async function watch() {
         outdir: resolve(__dirname,'../build'),
         bundle: true,
         minify: true,
-        platform: 'node',
+        platform: 'browser',
         target: 'ES2020',
-        logLevel: 'info',
-        external: ['mysql2', 'knex'],
+        logLevel: 'info', 
     });
     
     await ctx.watch();
